@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import dev.tunks.taxitrips.batch.BatchDataProcessorApplication;
 import dev.tunks.taxitrips.batch.util.DataUtil;
@@ -24,13 +26,18 @@ public class BatchSaveOperationsTest {
 	
     private BatchSaveOperations<TaxiTrip> saveOperations;
 	private List<TaxiTrip> trips;
-	
-    @BeforeEach
+	private Query query; 
+    
+	@BeforeEach
 	public void setUp() throws Exception {
+        String pickupLocationId = "1";
+    	String dropoffLocationId = "2";
 		trips = new ArrayList<TaxiTrip>();
 		for(int i = 1; i<=10; i++) {
-			trips.add(createTaxiTrip());
+			trips.add(createTaxiTrip(pickupLocationId,dropoffLocationId));
 		}
+		query  = new Query(Criteria.where("pickupLocationId").is(pickupLocationId)
+				           .and("dropoffLocationId").is(dropoffLocationId));
     	saveOperations = new BatchSaveOperations<TaxiTrip>(mongoTemplate,DataUtil.TRIPS_COLLECTION);
 	}
 
@@ -42,12 +49,14 @@ public class BatchSaveOperationsTest {
 	@Test
 	public void testSaveAll() {
 		saveOperations.saveAll(trips);
+		long count = mongoTemplate.count(query, TaxiTrip.class);
+		assertEquals(trips.size(),count);
 	}
 	
-	private TaxiTrip createTaxiTrip() {
+	private TaxiTrip createTaxiTrip(String pickupLocationId, String dropoffLocationId) {
 		TaxiTrip trip = new TaxiTrip();
-		trip.setPickupLocationId("1");
-		trip.setDropoffLocationId("2");
+		trip.setPickupLocationId(pickupLocationId);
+		trip.setDropoffLocationId(dropoffLocationId);
 		return trip;
 	}
 
