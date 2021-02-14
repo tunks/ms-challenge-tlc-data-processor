@@ -271,7 +271,7 @@ public class BatchJobConfiguration{
 		reader.setResource(new UrlResource(fileName));
 		//Skip the first header line
 		reader.setLinesToSkip(1);
-		reader.setMaxItemCount(100);
+		//reader.setMaxItemCount(100);
 		return reader;
 	}
 	
