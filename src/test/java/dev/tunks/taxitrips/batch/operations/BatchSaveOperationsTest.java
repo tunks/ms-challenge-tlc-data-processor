@@ -14,13 +14,13 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ActiveProfiles;
-
-import dev.tunks.taxitrips.batch.BatchDataProcessorApplication;
+import org.springframework.test.context.TestPropertySource;
 import dev.tunks.taxitrips.batch.util.DataUtil;
 import dev.tunks.taxitrips.model.TaxiTrip;
 
-@SpringBootTest(classes = {BatchDataProcessorApplication.class})
-@ActiveProfiles("dev")
+@SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
+@ActiveProfiles("test")
 public class BatchSaveOperationsTest {
 	@Autowired
 	private MongoTemplate mongoTemplate;

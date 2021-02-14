@@ -104,7 +104,6 @@ public class BatchJobConfiguration{
     private int[] rfvTaxiFieldIndexes;
 	
     
-    
 	@Bean
 	public TaskExecutor taskExecutor() {
 	       ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
