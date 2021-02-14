@@ -6,7 +6,6 @@ import org.springframework.validation.BindException;
 import dev.tunks.taxitrips.model.Location;
 
 public class LocationZoneMapper implements FieldSetMapper<Location> {
-	
 	@Override
 	public Location mapFieldSet(FieldSet fieldSet) throws BindException {
 		if (fieldSet == null) {
