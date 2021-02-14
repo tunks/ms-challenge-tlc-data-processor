@@ -1,6 +1,9 @@
 package dev.tunks.taxitrips.batch.operations;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.BulkOperations.BulkMode;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +18,8 @@ import com.mongodb.BasicDBObject;
  * @author ebrimatunkara 
  */
 public class BatchSaveOperations<T> implements SaveOperations<T> {
+	private static final Logger logger = LoggerFactory.getLogger(BatchSaveOperations.class);
+
     private MongoTemplate mongoTemplate;
     private String collection;
     
@@ -25,13 +30,18 @@ public class BatchSaveOperations<T> implements SaveOperations<T> {
 
 	@Override
 	public void saveAll(List<? extends T> items) {
-		if(items.isEmpty()) 
-		{
-		   return;
+		try {
+			if(items.isEmpty()) 
+			{
+			   return;
+			}
+			BulkOperations blkOperations = mongoTemplate.bulkOps(BulkMode.UNORDERED, collection);
+			items.stream().forEach(item->insertOrUpdate(blkOperations, item));
+			blkOperations.execute();
 		}
-		BulkOperations blkOperations = mongoTemplate.bulkOps(BulkMode.UNORDERED, collection);
-		items.stream().forEach(item->insertOrUpdate(blkOperations, item));
-		blkOperations.execute();
+		catch(Exception ex) {
+			logger.error(ex.getMessage());
+		}
 	}
 
 	private void insertOrUpdate(BulkOperations blkOperations, T item) {
@@ -52,5 +62,4 @@ public class BatchSaveOperations<T> implements SaveOperations<T> {
 			blkOperations.insert(item);	
 		}
 	}
-
 }
