@@ -1,6 +1,11 @@
 #### Data Processor service
 A simple Spring batch application to parse and store NYT TLC taxi trips data set in MongoDB.
 
+#### Code Dependencies
+- Java 1.8+
+- Apache Maven 3.x
+- MongoDB database (Not required for Junit test cases, it uses an embedded MongoDB for execute test units)
+
 #### Build
 Build the project with the test unit using Apache maven. The repository is integrated with Azure Dev Ops for CI/CD and the build is automatically after each commit
 
